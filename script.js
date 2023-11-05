@@ -1,5 +1,7 @@
 // Task 1 - Display a simple business card for every user
-
+// Task 2 - Display the above cards in the reverse order
+// Task 3 - Add a remove button inside each card that deletes it
+// Task 4 - Add a clone button inside each card that clones it. Make sure that the buttons inside the cloned card work properly.
 const people = [
     {
         firstName: 'Jan',
@@ -16,6 +18,25 @@ const people = [
 function simpleBusinessCard (people) {
     const container = document.getElementById('business-cards');
 
+    function onRemoveClick(event) {
+        event.target.parentNode.remove();
+    }
+
+    function onCloneClick(event) {
+
+        const card = event.target.parentNode.cloneNode(true);
+        const cloneButtonElement = card.getElementsByClassName("clone-button")[0];
+
+        if (cloneButtonElement) {
+            cloneButtonElement.addEventListener("click", onCloneClick)
+        }
+        const removeButtonElement = card.getElementsByClassName("remove-button")[0];
+        if (removeButtonElement) {
+            removeButtonElement.addEventListener("click", onRemoveClick)
+        }
+
+        container.appendChild(card);
+    }
     people.forEach(people => {
         const card = document.createElement('div');
         card.classList.add("business-card");
@@ -31,16 +52,13 @@ function simpleBusinessCard (people) {
 
         const removeButton = document.createElement("button");
         removeButton.textContent = 'Remove';
-        removeButton.addEventListener("click", ()=> {
-            container.removeChild(card);
-        });
+        removeButton.classList.add("remove-button");
+        removeButton.addEventListener("click", onRemoveClick);
 
         const cloneButton = document.createElement("button");
         cloneButton.textContent = "Clone";
-        cloneButton.addEventListener("click", () => {
-            const clonedCard = card.cloneNode(true);
-            container.appendChild(clonedCard);
-        });
+        cloneButton.classList.add("clone-button");
+        cloneButton.addEventListener("click", onCloneClick);
 
         card.appendChild(firstNameElement);
         card.appendChild(lastNameElement);
